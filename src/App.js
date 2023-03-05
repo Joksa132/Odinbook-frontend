@@ -5,19 +5,19 @@ import { UserContext } from "./Context/UserContext";
 import Home from "./Components/Home/Home";
 import Register from "./Components/Register/Register";
 import Login from "./Components/Login/Login";
-import Nav from "./Components/Nav/Nav";
+import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute"
 
 function App() {
-  // const { user } = useContext(UserContext)
+  const { user } = useContext(UserContext)
 
   return (
     <div className="App">
       <BrowserRouter>
-        <Nav />
+
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<ProtectedRoute isLoggedIn={user} destination={"/login"}><Home /></ProtectedRoute>} />
+          <Route path="/register" element={<ProtectedRoute isLoggedIn={!user} destination={"/"}><Register /></ProtectedRoute>} />
+          <Route path="/login" element={<ProtectedRoute isLoggedIn={!user} destination={"/"}><Login /></ProtectedRoute>} />
         </Routes>
       </BrowserRouter>
     </div>
