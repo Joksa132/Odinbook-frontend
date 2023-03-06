@@ -99,7 +99,7 @@ function Home() {
         >
           {posts.map(post => {
             return (
-              <Post key={post._id} createdBy={[post.createdBy.firstName, " ", post.createdBy.lastName]} createdAt={post.createdAt} description={post.description} />
+              <Post key={post._id} post={post} />
             )
           })}
         </Container>
