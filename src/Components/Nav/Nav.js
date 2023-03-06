@@ -40,7 +40,7 @@ function Nav() {
 
   return (
     <ThemeProvider theme={darkTheme}>
-      <AppBar position="static">
+      <AppBar position="sticky">
         <Toolbar>
           <Typography
             variant="h5"
