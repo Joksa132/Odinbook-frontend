@@ -6,8 +6,8 @@ import { useContext, useEffect, useState } from "react"
 import { UserContext } from "../../Context/UserContext"
 import axios from "axios";
 
-import Nav from "../Nav/Nav"
-import Post from '../Post/Post';
+import Nav from "../../Components/Nav/Nav"
+import Post from '../../Components/Post/Post';
 
 const darkTheme = createTheme({
   palette: {
