@@ -12,6 +12,7 @@ import Box from '@mui/material/Box';
 import { useContext, useState } from "react"
 import { UserContext } from "../../Context/UserContext"
 import { useNavigate } from 'react-router-dom';
+import { TextField } from '@mui/material';
 
 const darkTheme = createTheme({
   palette: {
@@ -23,6 +24,7 @@ function Nav() {
   const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate()
   const { user, setUser } = useContext(UserContext)
+  const [searchTerm, setSearchTerm] = useState('')
 
   const handleMenu = (e) => {
     setAnchorEl(e.currentTarget);
@@ -38,19 +40,25 @@ function Nav() {
     navigate("/login");
   }
 
+  const onChangeSearchTerm = (e) => {
+    setSearchTerm(e.target.value)
+  }
+
+  const onSubmit = (e) => {
+    e.preventDefault()
+    navigate(`/search/${searchTerm}`)
+  }
+
   return (
     <ThemeProvider theme={darkTheme}>
       <AppBar position="sticky">
-        <Toolbar>
+        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
           <Typography
             variant="h5"
             component="a"
             href="/"
             sx={{
-              display: { xs: 'none', md: 'flex' },
-              flexGrow: 1,
               textDecoration: 'none',
-              letterSpacing: '.3rem',
               color: 'inherit',
               fontWeight: 700,
             }}
@@ -58,9 +66,16 @@ function Nav() {
             Odinbook
           </Typography>
 
-          <Box sx={{ flexGrow: 1 }}>
-            <Link variant="h6" href='/' sx={{ textDecoration: 'none', color: "white", marginRight: 3 }}>Home</Link>
-            <Link variant="h6" href='/' sx={{ textDecoration: 'none', color: "white" }}>Profile</Link>
+          <Box component="form" onSubmit={onSubmit} >
+            <TextField
+              rows="2"
+              placeholder="Search"
+              id="search-bar"
+              label="Search"
+              name="search-bar"
+              fullWidth
+              onChange={onChangeSearchTerm}
+            />
           </Box>
 
           <IconButton
@@ -70,10 +85,12 @@ function Nav() {
             aria-haspopup="true"
             onClick={handleMenu}
             color="inherit"
+            sx={{ gap: "5px" }}
           >
             <AccountCircle />
+            <Typography variant="h6">{user}</Typography>
           </IconButton>
-          <Typography variant="h6">{user}</Typography>
+
           <Menu
             id="menu-appbar"
             anchorEl={anchorEl}
