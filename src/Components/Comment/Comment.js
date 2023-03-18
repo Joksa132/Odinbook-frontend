@@ -2,7 +2,21 @@ import { Typography, Button } from "@mui/material";
 import { Box } from "@mui/system";
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 
-function Comment({ comment }) {
+import axios from "axios";
+import { UserContext } from "../../Context/UserContext"
+import { useContext } from "react";
+
+function Comment({ comment, onLikedComment }) {
+  const { user } = useContext(UserContext)
+
+  const likeComment = () => {
+    const like = {
+      commentId: comment._id
+    }
+    axios.post("http://localhost:4000/comment/like", like, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
+      .then((res) => onLikedComment())
+  }
+
   return (
     <Box
       sx={{
@@ -19,8 +33,8 @@ function Comment({ comment }) {
       <Typography variant="body2" paragraph fontWeight="500">
         {comment.description}
       </Typography>
-      <Typography color="primary" fontSize="small">5 likes</Typography>
-      <Button size="small" startIcon={<ThumbUpIcon />}>Like</Button>
+      <Typography color="primary" fontSize="small">{comment.likes.length} likes</Typography>
+      <Button size="small" startIcon={<ThumbUpIcon />} onClick={likeComment}>{comment.likes.find(likeData => likeData._id === user.userId) ? "Dislike" : "Like"}</Button>
     </Box>
   )
 }
