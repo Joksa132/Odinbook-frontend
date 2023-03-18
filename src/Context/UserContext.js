@@ -4,12 +4,16 @@ import axios from "axios";
 export const UserContext = createContext();
 
 export const UserProvider = (props) => {
-  const [user, setUser] = useState()
+  const [user, setUser] = useState({})
 
   useEffect(() => {
     axios.get("http://localhost:4000/user/info", { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }).then(res => {
-      setUser(res.data.userName)
-      console.log(res.data.userName)
+      setUser(
+        {
+          username: res.data.userName,
+          userId: res.data.userId
+        }
+      )
     })
   }, [])
 
