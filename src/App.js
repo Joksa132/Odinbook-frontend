@@ -6,6 +6,8 @@ import Home from "./Pages/Home/Home";
 import Register from "./Pages/Register/Register";
 import Login from "./Pages/Login/Login";
 import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute"
+import Profile from "./Components/Profile/Profile"
+import SearchProfiles from "./Pages/SearchProfiles/SearchProfiles";
 
 function App() {
   const { user } = useContext(UserContext)
@@ -15,9 +17,11 @@ function App() {
       <BrowserRouter>
 
         <Routes>
-          <Route path="/" element={<ProtectedRoute isLoggedIn={user} destination={"/login"}><Home /></ProtectedRoute>} />
-          <Route path="/register" element={<ProtectedRoute isLoggedIn={!user} destination={"/"}><Register /></ProtectedRoute>} />
-          <Route path="/login" element={<ProtectedRoute isLoggedIn={!user} destination={"/"}><Login /></ProtectedRoute>} />
+          <Route path="/" element={<ProtectedRoute isLoggedIn={!user} destination={"/login"}><Home /></ProtectedRoute>} />
+          <Route path="/register" element={<ProtectedRoute isLoggedIn={user} destination={"/"}><Register /></ProtectedRoute>} />
+          <Route path="/login" element={<ProtectedRoute isLoggedIn={user} destination={"/"}><Login /></ProtectedRoute>} />
+          <Route path="/search/:name" element={<ProtectedRoute isLoggedIn={!user} destination={"/login"}><SearchProfiles /></ProtectedRoute>} />
+          <Route path="/profile/:id" element={<Profile />} />
         </Routes>
       </BrowserRouter>
     </div>

@@ -39,7 +39,10 @@ function Login() {
     axios.post("http://localhost:4000/user/login", user)
       .then((res) => {
         console.log(res.data)
-        setUser(res.data.userInfo.username)
+        setUser({
+          username: res.data.userInfo.username,
+          userId: res.data.userInfo.Id
+        })
         localStorage.setItem("token", res.data.token)
       })
       .catch((err) => console.log(err))
