@@ -34,11 +34,17 @@ function Home() {
       .catch((err) => console.log(err))
   }
 
+  function handleLikePost() {
+    axios.get("http://localhost:4000/post/all")
+      .then((res) => setPosts(res.data))
+      .catch((err) => console.log(err))
+  }
+
   useEffect(() => {
     axios.get("http://localhost:4000/post/all")
       .then((res) => setPosts(res.data))
       .catch((err) => console.log(err))
-  }, [posts])
+  }, [])
 
   return (
     <>
@@ -70,7 +76,7 @@ function Home() {
             <TextField
               multiline
               rows="5"
-              placeholder={`What's on your mind, ${user}?`}
+              placeholder={`What's on your mind, ${user.username}?`}
               id="description"
               label="Post"
               name="description"
@@ -99,7 +105,7 @@ function Home() {
         >
           {posts.map(post => {
             return (
-              <Post key={post._id} post={post} />
+              <Post key={post._id} post={post} onLikedPost={handleLikePost} />
             )
           })}
         </Container>

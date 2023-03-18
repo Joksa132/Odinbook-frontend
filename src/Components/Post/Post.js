@@ -3,14 +3,17 @@ import { Box } from "@mui/system"
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import Comment from "../Comment/Comment";
+import { UserContext } from "../../Context/UserContext"
 
-function Post({ post }) {
+function Post({ post, onLikedPost }) {
   const [commentsShown, setCommentsShown] = useState(false)
   const [description, setDescription] = useState('')
   const [comments, setComments] = useState([])
+  const [commentsLoading, setCommentsLoading] = useState(true)
+  const { user } = useContext(UserContext)
 
   const onChangeDescription = (e) => {
     setDescription(e.target.value)
@@ -23,17 +26,20 @@ function Post({ post }) {
       id: post._id
     }
     axios.post("http://localhost:4000/comment/new", newComment, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
-      .then((res) => console.log(res.data))
+      .then((res) => setComments(prevComments => [...prevComments, res.data]))
       .catch((err) => console.log(err))
   }
 
   useEffect(() => {
     async function getComments() {
       try {
+        setCommentsLoading(true)
         const data = await axios.get(`http://localhost:4000/comment/${post._id}`)
         setComments(data.data)
       } catch (e) {
         console.log(e)
+      } finally {
+        setCommentsLoading(false);
       }
     }
     getComments()
@@ -41,6 +47,20 @@ function Post({ post }) {
 
   const showComments = () => {
     setCommentsShown(!commentsShown)
+  }
+
+  const likePost = () => {
+    const like = {
+      postId: post._id
+    }
+    axios.post("http://localhost:4000/post/like", like, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
+      .then((res) => onLikedPost())
+  }
+
+  function handleLikeComment() {
+    axios.get(`http://localhost:4000/comment/${post._id}`)
+      .then((res) => setComments(res.data))
+      .catch((err) => console.log(err))
   }
 
   return (
@@ -72,10 +92,10 @@ function Post({ post }) {
           {post.description}
         </Typography>
         <Divider />
-        <Typography color="primary">5 likes 5 comments placeholder</Typography>
+        <Typography color="primary">{post.likes.length} likes</Typography>
         <Divider />
         <Box sx={{ dispay: "flex", justifyContent: "center", alignItems: "center" }}>
-          <Button startIcon={<ThumbUpIcon />}>Like</Button>
+          <Button startIcon={<ThumbUpIcon />} onClick={likePost}>{post.likes.find(likeData => likeData._id === user.userId) ? "Dislike" : "Like"}</Button>
           <Button startIcon={<ChatBubbleIcon />} onClick={showComments}>Comment</Button>
         </Box>
         {commentsShown && (
@@ -119,14 +139,15 @@ function Post({ post }) {
                   justifyContent: "center",
                 }}
               >
-                {comments.map(comment => {
-                  return (
-                    <>
-                      <Comment key={comment._id} comment={comment} />
-                      <Divider />
-                    </>
-                  )
-                })}
+                {!commentsLoading ?
+                  comments.map(comment => {
+                    return (
+                      <>
+                        <Comment key={comment._id} comment={comment} onLikedComment={handleLikeComment} />
+                        <Divider />
+                      </>
+                    )
+                  }) : "Loading"}
               </Box>
 
             </Box>
