@@ -1,14 +1,16 @@
-import { Button, Typography, Divider, TextField } from "@mui/material"
+import { Button, Typography, Divider, TextField, Link } from "@mui/material"
 import { Box } from "@mui/system"
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import EditIcon from '@mui/icons-material/Edit';
 
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import Comment from "../Comment/Comment";
 import { UserContext } from "../../Context/UserContext"
 
-function Post({ post, onLikedPost }) {
+function Post({ post, onLikedPost, posts, setPosts, handleEdit }) {
   const [commentsShown, setCommentsShown] = useState(false)
   const [description, setDescription] = useState('')
   const [comments, setComments] = useState([])
@@ -26,7 +28,10 @@ function Post({ post, onLikedPost }) {
       id: post._id
     }
     axios.post("http://localhost:4000/comment/new", newComment, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
-      .then((res) => setComments(prevComments => [...prevComments, res.data]))
+      .then((res) => {
+        setComments(prevComments => [res.data, ...prevComments])
+        setDescription('')
+      })
       .catch((err) => console.log(err))
   }
 
@@ -57,10 +62,20 @@ function Post({ post, onLikedPost }) {
       .then((res) => onLikedPost())
   }
 
-  function handleLikeComment() {
+  const handleLikeComment = () => {
     axios.get(`http://localhost:4000/comment/${post._id}`)
       .then((res) => setComments(res.data))
       .catch((err) => console.log(err))
+  }
+
+  const handleDelete = () => {
+    const confirmation = window.confirm("Are you sure you want to delete this post?")
+    confirmation &&
+      axios.delete(`http://localhost:4000/post/delete/${post._id}`, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
+        .then((res) => {
+          setPosts(posts.filter((post) => post._id !== res.data._id))
+        })
+        .catch((err) => console.log(err))
   }
 
   return (
@@ -73,11 +88,24 @@ function Post({ post, onLikedPost }) {
         borderRadius: "8px"
       }}>
       <Box>
-        <Typography
-          variant="h6"
-        >
-          {`${post.createdBy.firstName} ${post.createdBy.lastName}`}
-        </Typography>
+        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Link
+            variant="h6"
+            href={"/profile/" + post.createdBy._id}
+            sx={{
+              textDecoration: "none"
+            }}
+          >
+            {`${post.createdBy.firstName} ${post.createdBy.lastName}`}
+          </Link>
+          <Box>
+            {post.createdBy._id === user.userId ? <>
+              <Button startIcon={<DeleteForeverIcon />} onClick={handleDelete}>Delete</Button>
+              <Button startIcon={<EditIcon />} onClick={handleEdit}>Edit</Button> </>
+              : <></>}
+          </Box>
+        </Box>
+
         <Typography
           variant="subtitle1"
           color="#e0e0e0"
@@ -122,6 +150,7 @@ function Post({ post, onLikedPost }) {
                   fullWidth
                   autoComplete="off"
                   sx={{ mt: 2 }}
+                  value={description}
                 />
                 <Button
                   type="submit"
@@ -143,7 +172,13 @@ function Post({ post, onLikedPost }) {
                   comments.map(comment => {
                     return (
                       <>
-                        <Comment key={comment._id} comment={comment} onLikedComment={handleLikeComment} />
+                        <Comment
+                          key={comment._id}
+                          comment={comment}
+                          onLikedComment={handleLikeComment}
+                          comments={comments}
+                          setComments={setComments}
+                        />
                         <Divider />
                       </>
                     )
