@@ -88,7 +88,7 @@ function Nav() {
             sx={{ gap: "5px" }}
           >
             <AccountCircle />
-            <Typography variant="h6">{user}</Typography>
+            <Typography variant="h6">{user.username}</Typography>
           </IconButton>
 
           <Menu
