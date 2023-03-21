@@ -97,7 +97,7 @@ function Nav() {
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
-            <MenuItem><Link href='/' sx={{ textDecoration: 'none', color: "white" }}>Profile</Link></MenuItem>
+            <MenuItem><Link href={"/profile/" + user.userId} sx={{ textDecoration: 'none', color: "white" }}>Profile</Link></MenuItem>
             <MenuItem onClick={logoutUser}>Logout</MenuItem>
           </Menu>
         </Toolbar>
