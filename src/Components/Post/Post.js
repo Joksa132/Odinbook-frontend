@@ -10,7 +10,7 @@ import axios from "axios";
 import Comment from "../Comment/Comment";
 import { UserContext } from "../../Context/UserContext"
 
-function Post({ post, onLikedPost, posts, setPosts, handleEdit }) {
+function Post({ post, onLikedPost, handleEdit, handleDelete }) {
   const [commentsShown, setCommentsShown] = useState(false)
   const [description, setDescription] = useState('')
   const [comments, setComments] = useState([])
@@ -68,21 +68,11 @@ function Post({ post, onLikedPost, posts, setPosts, handleEdit }) {
       .catch((err) => console.log(err))
   }
 
-  const handleDelete = () => {
-    const confirmation = window.confirm("Are you sure you want to delete this post?")
-    confirmation &&
-      axios.delete(`http://localhost:4000/post/delete/${post._id}`, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
-        .then((res) => {
-          setPosts(posts.filter((post) => post._id !== res.data._id))
-        })
-        .catch((err) => console.log(err))
-  }
-
   return (
     <Box
       sx={{
         backgroundColor: "rgb(36,37,38)",
-        width: "60%",
+        width: "500px",
         padding: "10px",
         marginBottom: "20px",
         borderRadius: "8px"
@@ -116,6 +106,7 @@ function Post({ post, onLikedPost, posts, setPosts, handleEdit }) {
           variant="body2"
           paragraph
           fontWeight="500"
+          sx={{ wordWrap: "break-word" }}
         >
           {post.description}
         </Typography>

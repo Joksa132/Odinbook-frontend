@@ -44,6 +44,7 @@ function Home() {
       description,
       postId
     })
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
   }
 
   const onEditSubmit = (description, id) => {
@@ -56,6 +57,16 @@ function Home() {
         setEdit(null)
       })
       .catch(err => console.log(err))
+  }
+
+  const handleDelete = (id) => {
+    const confirmation = window.confirm("Are you sure you want to delete this post?")
+    confirmation &&
+      axios.delete(`http://localhost:4000/post/delete/${id}`, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
+        .then((res) => {
+          setPosts(posts.filter((post) => post._id !== res.data._id))
+        })
+        .catch((err) => console.log(err))
   }
 
   return (
@@ -91,7 +102,9 @@ function Home() {
                 onLikedPost={handleLikePost}
                 posts={posts}
                 setPosts={setPosts}
-                handleEdit={() => handleEdit(post.description, post._id)} />
+                handleEdit={() => handleEdit(post.description, post._id)}
+                handleDelete={() => handleDelete(post._id)}
+              />
             )
           })}
         </Container>
