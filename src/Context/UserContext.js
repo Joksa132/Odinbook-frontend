@@ -7,14 +7,16 @@ export const UserProvider = (props) => {
   const [user, setUser] = useState({})
 
   useEffect(() => {
-    axios.get("http://localhost:4000/user/info", { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }).then(res => {
-      setUser(
-        {
-          username: res.data.userName,
-          userId: res.data.userId
-        }
-      )
-    })
+    axios.get("http://localhost:4000/user/info", { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
+      .then(res => {
+        setUser(
+          {
+            username: res.data.userName,
+            userId: res.data.userId
+          }
+        )
+      })
+      .catch(setUser(null))
   }, [])
 
   return (
