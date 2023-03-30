@@ -15,13 +15,13 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
-
         <Routes>
+          <Route path="/register" element={<ProtectedRoute id="register" isLoggedIn={user} destination={"/"}><Register /></ProtectedRoute>} />
+          <Route path="/login" element={<ProtectedRoute id="login" isLoggedIn={user} destination={"/"}><Login /></ProtectedRoute>} />
+
           <Route path="/" element={<ProtectedRoute isLoggedIn={!user} destination={"/login"}><Home /></ProtectedRoute>} />
-          <Route path="/register" element={<ProtectedRoute isLoggedIn={user} destination={"/"}><Register /></ProtectedRoute>} />
-          <Route path="/login" element={<ProtectedRoute isLoggedIn={user} destination={"/"}><Login /></ProtectedRoute>} />
           <Route path="/search/:name" element={<ProtectedRoute isLoggedIn={!user} destination={"/login"}><SearchProfiles /></ProtectedRoute>} />
-          <Route path="/profile/:id" element={<Profile />} />
+          <Route path="/profile/:id" element={<ProtectedRoute isLoggedIn={!user} destination={"/login"}><Profile /></ProtectedRoute>} />
         </Routes>
       </BrowserRouter>
     </div>

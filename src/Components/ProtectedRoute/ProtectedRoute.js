@@ -1,9 +1,10 @@
 import { Navigate } from "react-router-dom";
 
-const ProtectedRoute = ({ isLoggedIn, destination, children }) => {
+const ProtectedRoute = ({ id, isLoggedIn, destination, children }) => {
   if (isLoggedIn) {
     return <Navigate to={destination} replace />;
   }
+
   return children;
 };
 
