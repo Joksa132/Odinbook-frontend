@@ -1,11 +1,13 @@
 import { Typography, Button } from "@mui/material";
 import { Box } from "@mui/system";
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 import axios from "axios";
 import { UserContext } from "../../Context/UserContext"
 import { useContext } from "react";
+import { Link } from "react-router-dom";
 
 function Comment({ comment, onLikedComment, comments, setComments }) {
   const { user } = useContext(UserContext)
@@ -35,10 +37,23 @@ function Comment({ comment, onLikedComment, comments, setComments }) {
       }}
     >
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Typography variant="subtitle2" sx={{ marginTop: "10px" }}>
-          {`${comment.createdBy.firstName} ${comment.createdBy.lastName}`}
-        </Typography>
-        <Button startIcon={<DeleteForeverIcon fontSize="small" />} onClick={handleDelete}>Delete</Button>
+        <Box display={"flex"} sx={{ alignItems: "center", gap: "5px" }}>
+          {comment.createdBy.profilePicture ?
+            <img src={`http://localhost:4000/profilepicture/${comment.createdBy.profilePicture}`} alt='profile' width={"8%"} style={{ borderRadius: "30px" }} />
+            : <img src={`http://localhost:4000/profilepicture/default-avatar.jpg`} alt='profile' width={"8%"} style={{ borderRadius: "30px" }} />
+          }
+          <Link
+            to={"/profile/" + comment.createdBy._id}
+            style={{ textDecoration: "none" }}
+          >
+            <Typography variant="subtitle2" color={"primary"} sx={{ marginTop: "10px" }}>
+              {`${comment.createdBy.firstName} ${comment.createdBy.lastName}`}
+            </Typography>
+          </Link>
+        </Box>
+        {comment.createdBy._id === user.userId &&
+          <Button startIcon={<DeleteForeverIcon fontSize="small" />} onClick={handleDelete}>Delete</Button>
+        }
       </Box>
 
       <Typography variant="subtitle1" color="#e0e0e0">
@@ -48,7 +63,10 @@ function Comment({ comment, onLikedComment, comments, setComments }) {
         {comment.description}
       </Typography>
       <Typography color="primary" fontSize="small">{comment.likes.length} likes</Typography>
-      <Button size="small" startIcon={<ThumbUpIcon />} onClick={likeComment}>{comment.likes.find(likeData => likeData._id === user.userId) ? "Dislike" : "Like"}</Button>
+      {comment.likes.find(likeData => likeData._id === user.userId) ?
+        <Button size="small" startIcon={<ThumbDownIcon />} onClick={likeComment}>Dislike</Button> :
+        <Button size="small" startIcon={<ThumbUpIcon />} onClick={likeComment}>Like</Button>}
+
     </Box>
   )
 }
