@@ -1,13 +1,17 @@
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { Container, CssBaseline, Typography } from '@mui/material';
+import { Button, Container, CssBaseline, IconButton, Typography } from '@mui/material';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
+import PhotoCamera from '@mui/icons-material/PhotoCamera';
 
 import Nav from "../Nav/Nav"
 import { useParams } from 'react-router-dom';
 import { Box } from '@mui/system';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import Post from '../Post/Post';
 import PostForm from '../PostForm/PostForm';
+import { UserContext } from "../../Context/UserContext";
 
 const darkTheme = createTheme({
   palette: {
@@ -22,6 +26,7 @@ function Profile() {
   const [loading, setLoading] = useState(true);
   const [postsLoading, setPostsLoading] = useState(true)
   const [edit, setEdit] = useState(null)
+  const { user } = useContext(UserContext)
 
   useEffect(() => {
     async function getProfileInfo() {
@@ -71,13 +76,34 @@ function Profile() {
         .catch((err) => console.log(err))
   }
 
-  const onSubmit = (description) => {
-    const newPost = {
-      description
+  const onSubmit = (description, image) => {
+    if (image) {
+      const formData = new FormData()
+      formData.append("image", image)
+      const newPost = {
+        description
+      }
+
+      axios.post("http://localhost:4000/post/new", newPost, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
+        .then(res => {
+          axios.put(`http://localhost:4000/post/newImage/${res.data._id}`, formData, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
+            .then(res => {
+              setPosts(prevPosts => [res.data, ...prevPosts])
+              console.log(res.data)
+            })
+            .catch(err => console.log(err))
+        })
+        .catch(err => console.log(err))
+
+    } else {
+      const newPost = {
+        description
+      }
+
+      axios.post("http://localhost:4000/post/new", newPost, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
+        .then((res) => { setPosts(prevPosts => [res.data, ...prevPosts]) })
+        .catch((err) => console.log(err))
     }
-    axios.post("http://localhost:4000/post/new", newPost, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
-      .then((res) => { setPosts(prevPosts => [res.data, ...prevPosts]) })
-      .catch((err) => console.log(err))
   }
 
   const handleEdit = (description, postId) => {
@@ -100,6 +126,32 @@ function Profile() {
       .catch(err => console.log(err))
   }
 
+  const handleFollow = () => {
+    axios.get(`http://localhost:4000/user/${id}`)
+      .then((res) => setProfileInfo(res.data))
+      .catch(err => console.log(err))
+  }
+
+  const onFollow = () => {
+    const follow = {
+      id
+    }
+    axios.post("http://localhost:4000/user/follow", follow, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
+      .then(res => handleFollow())
+      .catch(err => console.log(err))
+  }
+
+  const handleImage = (e) => {
+    const uploadedImage = e.target.files[0];
+
+    const formData = new FormData()
+    formData.append("image", uploadedImage)
+
+    axios.put(`http://localhost:4000/user/profilepicture/${profileInfo._id}`, formData, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
+      .then(res => setProfileInfo(res.data))
+      .catch(err => console.log(err))
+  }
+
   return (
     <>
       <Nav />
@@ -116,10 +168,33 @@ function Profile() {
                 marginTop: "20px"
               }}
             >
-              <Typography variant='h4' sx={{ marginBottom: "10px" }}>
-                {profileInfo[0].firstName + " " + profileInfo[0].lastName}
-              </Typography>
-              <PostForm onSubmit={onSubmit} editValue={edit?.description} id={edit?.postId} onEdit={onEditSubmit} />
+              <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: "10px" }}>
+                <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "10px" }}>
+                  {profileInfo.profilePicture ?
+                    <img src={`http://localhost:4000/profilepicture/${profileInfo.profilePicture}`} alt='profile' width={"10%"} style={{ borderRadius: "30px" }} />
+                    : <img src={`http://localhost:4000/profilepicture/default-avatar.jpg`} alt='profile' width={"10%"} style={{ borderRadius: "30px" }} />
+                  }
+                  <Typography variant='h4' sx={{ marginBottom: "10px" }}>
+                    {profileInfo.firstName + " " + profileInfo.lastName}
+                  </Typography>
+                </Box>
+                {profileInfo._id === user.userId &&
+                  <IconButton color="primary" aria-label="upload picture" component="label">
+                    <input type="file" hidden accept="image/*" id="button-upload-image" onChange={handleImage} />
+                    <PhotoCamera />
+                    <Typography>Change your picture</Typography>
+                  </IconButton>
+
+                }
+              </Box>
+
+              {profileInfo._id !== user.userId ?
+                profileInfo.followedBy.find(follower => follower._id === user.userId) ?
+                  <Button variant='contained' onClick={() => { onFollow(); handleFollow() }} startIcon={<PersonRemoveIcon />} sx={{ marginBottom: "10px" }}>Unfollow</Button>
+                  : <Button variant='contained' onClick={() => { onFollow(); handleFollow() }} startIcon={<PersonAddIcon />} sx={{ marginBottom: "10px" }}>Follow</Button>
+
+                : <PostForm onSubmit={onSubmit} editValue={edit?.description} id={edit?.postId} onEdit={onEditSubmit} />}
+
               <Box
                 sx={{
                   display: "flex",
