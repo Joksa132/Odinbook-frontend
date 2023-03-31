@@ -1,6 +1,8 @@
-import { Button, Typography, Divider, TextField, Link } from "@mui/material"
+import { Button, Typography, Divider, TextField } from "@mui/material"
+import { Link } from "react-router-dom"
 import { Box } from "@mui/system"
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
@@ -79,16 +81,19 @@ function Post({ post, onLikedPost, handleEdit, handleDelete }) {
       }}>
       <Box>
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Link
-            variant="h6"
-            href={"/profile/" + post.createdBy._id}
-            sx={{
-              textDecoration: "none"
-            }}
-          >
-            {`${post.createdBy.firstName} ${post.createdBy.lastName}`}
-          </Link>
-          <Box>
+          <Box display={"flex"} sx={{ alignItems: "center", gap: "5px" }}>
+            {post.createdBy.profilePicture ?
+              <img src={`http://localhost:4000/profilepicture/${post.createdBy.profilePicture}`} alt='profile' width={"10%"} style={{ borderRadius: "30px" }} />
+              : <img src={`http://localhost:4000/profilepicture/default-avatar.jpg`} alt='profile' width={"10%"} style={{ borderRadius: "30px" }} />
+            }
+            <Link
+              to={"/profile/" + post.createdBy._id}
+              style={{ textDecoration: "none" }}
+            >
+              <Typography variant="h6" color="primary" >{`${post.createdBy.firstName} ${post.createdBy.lastName}`}</Typography>
+            </Link>
+          </Box>
+          <Box display={"flex"}>
             {post.createdBy._id === user.userId ? <>
               <Button startIcon={<DeleteForeverIcon />} onClick={handleDelete}>Delete</Button>
               <Button startIcon={<EditIcon />} onClick={handleEdit}>Edit</Button> </>
@@ -110,11 +115,18 @@ function Post({ post, onLikedPost, handleEdit, handleDelete }) {
         >
           {post.description}
         </Typography>
+        {post.image &&
+          <Box>
+            <img src={`http://localhost:4000/images/${post.image}`} alt={"Post"} width="100%" />
+          </Box>
+        }
         <Divider />
         <Typography color="primary">{post.likes.length} likes</Typography>
         <Divider />
         <Box sx={{ dispay: "flex", justifyContent: "center", alignItems: "center" }}>
-          <Button startIcon={<ThumbUpIcon />} onClick={likePost}>{post.likes.find(likeData => likeData._id === user.userId) ? "Dislike" : "Like"}</Button>
+          {post.likes.find(likeData => likeData._id === user.userId) ?
+            <Button startIcon={<ThumbDownIcon />} onClick={likePost}>Dislike</Button>
+            : <Button startIcon={<ThumbUpIcon />} onClick={likePost}>Like</Button>}
           <Button startIcon={<ChatBubbleIcon />} onClick={showComments}>Comment</Button>
         </Box>
         {commentsShown && (
@@ -180,7 +192,7 @@ function Post({ post, onLikedPost, handleEdit, handleDelete }) {
           </>
         )}
       </Box>
-    </Box>
+    </Box >
   )
 }
 
