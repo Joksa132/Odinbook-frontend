@@ -5,13 +5,12 @@ import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import Link from '@mui/material/Link';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Box from '@mui/material/Box';
 
 import { useContext, useState } from "react"
 import { UserContext } from "../../Context/UserContext"
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { TextField } from '@mui/material';
 
 const darkTheme = createTheme({
@@ -97,7 +96,7 @@ function Nav() {
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
-            <MenuItem><Link href={"/profile/" + user.userId} sx={{ textDecoration: 'none', color: "white" }}>Profile</Link></MenuItem>
+            <MenuItem><Link to={"/profile/" + user.userId} style={{ textDecoration: 'none', color: "white" }}>Profile</Link></MenuItem>
             <MenuItem onClick={logoutUser}>Logout</MenuItem>
           </Menu>
         </Toolbar>

@@ -1,7 +1,7 @@
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { CssBaseline, Container, Typography, Link, Divider } from '@mui/material';
+import { CssBaseline, Container, Typography, Divider } from '@mui/material';
 
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import Nav from "../../Components/Nav/Nav";
 import { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -46,21 +46,22 @@ function SearchProfiles() {
               backgroundColor: "rgb(36,37,38)",
               width: "500px",
               maxWidth: "100%",
-              padding: "5px"
+              padding: "5px",
+              borderRadius: "15px"
             }}
           >
             {
               profiles.map(profile => {
                 return (
                   <Link
-                    variant='h6'
-                    href={"/profile/" + profile._id}
-                    sx={{
-
+                    to={"/profile/" + profile._id}
+                    style={{
                       textDecoration: "none"
                     }}
                   >
-                    {profile.firstName + " " + profile.lastName}
+                    <Typography variant='h6' color="primary">
+                      {profile.firstName + " " + profile.lastName}
+                    </Typography>
                     <Divider />
                   </Link>
                 )
