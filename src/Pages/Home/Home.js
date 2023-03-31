@@ -1,4 +1,4 @@
-import { Container, CssBaseline } from '@mui/material';
+import { Button, Container, CssBaseline } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 import { useEffect, useState } from "react"
@@ -7,6 +7,7 @@ import axios from "axios";
 import Nav from "../../Components/Nav/Nav"
 import Post from '../../Components/Post/Post';
 import PostForm from '../../Components/PostForm/PostForm';
+import { Link } from 'react-router-dom';
 
 const darkTheme = createTheme({
   palette: {
@@ -18,23 +19,41 @@ function Home() {
   const [posts, setPosts] = useState([])
   const [edit, setEdit] = useState(null)
 
-  const onSubmit = (description) => {
-    const newPost = {
-      description
+  const onSubmit = (description, image) => {
+    if (image) {
+      const formData = new FormData()
+      formData.append("image", image)
+      const newPost = {
+        description
+      }
+
+      axios.post("http://localhost:4000/post/new", newPost, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
+        .then(res => {
+          axios.put(`http://localhost:4000/post/newImage/${res.data._id}`, formData, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
+            .then(res => setPosts(prevPosts => [res.data, ...prevPosts]))
+            .catch(err => console.log(err))
+        })
+        .catch(err => console.log(err))
+
+    } else {
+      const newPost = {
+        description
+      }
+
+      axios.post("http://localhost:4000/post/new", newPost, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
+        .then((res) => { setPosts(prevPosts => [res.data, ...prevPosts]) })
+        .catch((err) => console.log(err))
     }
-    axios.post("http://localhost:4000/post/new", newPost, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
-      .then((res) => { setPosts(prevPosts => [res.data, ...prevPosts]) })
-      .catch((err) => console.log(err))
   }
 
   function handleLikePost() {
-    axios.get("http://localhost:4000/post/all")
+    axios.get("http://localhost:4000/post/follows/all", { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
       .then((res) => setPosts(res.data))
       .catch((err) => console.log(err))
   }
 
   useEffect(() => {
-    axios.get("http://localhost:4000/post/all")
+    axios.get("http://localhost:4000/post/follows/all", { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
       .then((res) => setPosts(res.data))
       .catch((err) => console.log(err))
   }, [])
@@ -77,12 +96,15 @@ function Home() {
         <Container
           sx={{
             display: "flex",
-            justifyContent: "center",
             alignItems: "center",
-            mt: "20px"
+            mt: "20px",
+            flexDirection: "column"
           }}
         >
           <PostForm onSubmit={onSubmit} editValue={edit?.description} id={edit?.postId} onEdit={onEditSubmit} />
+          <Link style={{ textDecoration: "none" }} to="/search/all">
+            <Button variant='outlined'>Looking for people to follow?</Button>
+          </Link>
         </Container>
 
         <Container
