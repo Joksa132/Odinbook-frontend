@@ -39,7 +39,7 @@ function Comment({ comment, onLikedComment, comments, setComments }) {
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <Box display={"flex"} sx={{ alignItems: "center", gap: "5px" }}>
           {comment.createdBy.profilePicture ?
-            <img src={`${process.env.REACT_APP_BackendURL}/profilepicture/${comment.createdBy.profilePicture}`} alt='profile' width={"8%"} style={{ borderRadius: "30px" }} />
+            <img src={comment.createdBy.profilePicture} alt='profile' width={"8%"} style={{ borderRadius: "30px" }} />
             : <img src={`${process.env.REACT_APP_BackendURL}/profilepicture/default-avatar.jpg`} alt='profile' width={"8%"} style={{ borderRadius: "30px" }} />
           }
           <Link
