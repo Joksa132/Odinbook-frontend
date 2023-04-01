@@ -148,6 +148,12 @@ function Profile() {
     formData.append("image", uploadedImage)
 
     axios.put(`http://localhost:4000/user/profilepicture/${profileInfo._id}`, formData, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
+      .then(res => handleImageChange())
+      .catch(err => console.log(err))
+  }
+
+  const handleImageChange = () => {
+    axios.get(`http://localhost:4000/user/${id}`)
       .then(res => setProfileInfo(res.data))
       .catch(err => console.log(err))
   }
