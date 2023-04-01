@@ -21,6 +21,7 @@ function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const { setUser } = useContext(UserContext)
+  const [error, setError] = useState('');
 
   const onChangeUsername = (e) => {
     setUsername(e.target.value)
@@ -45,7 +46,10 @@ function Login() {
         })
         localStorage.setItem("token", res.data.token)
       })
-      .catch((err) => console.log(err))
+      .catch((err) => {
+        console.log(err)
+        setError(err.response.data.message)
+      })
   }
 
   return (
@@ -99,6 +103,11 @@ function Login() {
                 autoComplete="current-password"
                 onChange={onChangePassword}
               />
+              {error && (
+                <Typography variant="body2" color="error">
+                  {error}
+                </Typography>
+              )}
               <Button
                 type="submit"
                 variant="contained"

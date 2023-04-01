@@ -23,6 +23,7 @@ function Register() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const [error, setError] = useState('')
 
   const onChangeFirstName = (e) => {
     setFirstName(e.target.value)
@@ -49,9 +50,12 @@ function Register() {
       password
     }
     axios.post("http://localhost:4000/user/register", newUser)
-      .then((res) => console.log(res.data))
-      .catch((err) => console.log(err));
-    navigate("/login")
+      .then((res) => navigate("/login"))
+      .catch((err) => {
+        console.log(err)
+        setError(err.response.data.message)
+      });
+
   }
 
   return (
@@ -116,6 +120,11 @@ function Register() {
                 autoFocus
                 onChange={onChangeUsername}
               />
+              {error && (
+                <Typography variant="body2" color="error">
+                  {error}
+                </Typography>
+              )}
               <TextField
                 margin="normal"
                 required
