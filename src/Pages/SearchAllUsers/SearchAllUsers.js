@@ -17,7 +17,7 @@ function SearchAllUsers() {
   const [allUsers, setAllUsers] = useState([])
 
   useEffect(() => {
-    axios.get("http://localhost:4000/user/searchall", { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
+    axios.get(`${process.env.REACT_APP_BackendURL}/user/searchall`, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
       .then(res => { setAllUsers(res.data); console.log(res.data) })
       .catch(err => console.log(err))
   }, [])

@@ -27,9 +27,9 @@ function Home() {
         description
       }
 
-      axios.post("http://localhost:4000/post/new", newPost, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
+      axios.post(`${process.env.REACT_APP_BackendURL}/post/new`, newPost, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
         .then(res => {
-          axios.put(`http://localhost:4000/post/newImage/${res.data._id}`, formData, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
+          axios.put(`${process.env.REACT_APP_BackendURL}/post/newImage/${res.data._id}`, formData, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
             .then(res => setPosts(prevPosts => [res.data, ...prevPosts]))
             .catch(err => console.log(err))
         })
@@ -40,20 +40,20 @@ function Home() {
         description
       }
 
-      axios.post("http://localhost:4000/post/new", newPost, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
+      axios.post(`${process.env.REACT_APP_BackendURL}/post/new`, newPost, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
         .then((res) => { setPosts(prevPosts => [res.data, ...prevPosts]) })
         .catch((err) => console.log(err))
     }
   }
 
   function handleLikePost() {
-    axios.get("http://localhost:4000/post/follows/all", { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
+    axios.get(`${process.env.REACT_APP_BackendURL}/post/follows/all`, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
       .then((res) => setPosts(res.data))
       .catch((err) => console.log(err))
   }
 
   useEffect(() => {
-    axios.get("http://localhost:4000/post/follows/all", { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
+    axios.get(`${process.env.REACT_APP_BackendURL}/post/follows/all`, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
       .then((res) => setPosts(res.data))
       .catch((err) => console.log(err))
   }, [])
@@ -70,7 +70,7 @@ function Home() {
     const updatePost = {
       description
     }
-    axios.put(`http://localhost:4000/post/update/${id}`, updatePost)
+    axios.put(`${process.env.REACT_APP_BackendURL}/post/update/${id}`, updatePost)
       .then(res => {
         setPosts(posts.map(post => (post._id === res.data._id ? res.data : post)))
         setEdit(null)
@@ -81,7 +81,7 @@ function Home() {
   const handleDelete = (id) => {
     const confirmation = window.confirm("Are you sure you want to delete this post?")
     confirmation &&
-      axios.delete(`http://localhost:4000/post/delete/${id}`, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
+      axios.delete(`${process.env.REACT_APP_BackendURL}/post/delete/${id}`, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
         .then((res) => {
           setPosts(posts.filter((post) => post._id !== res.data._id))
         })

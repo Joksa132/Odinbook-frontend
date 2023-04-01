@@ -18,7 +18,7 @@ function SearchProfiles() {
   const [profiles, setProfiles] = useState([])
 
   useEffect(() => {
-    axios.get(`http://localhost:4000/user/search/${name}`, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
+    axios.get(`${process.env.REACT_APP_BackendURL}/user/search/${name}`, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
       .then((res) => setProfiles(res.data))
       .catch((err) => console.log(err))
   }, [name])

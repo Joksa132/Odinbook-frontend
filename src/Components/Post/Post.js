@@ -29,7 +29,7 @@ function Post({ post, onLikedPost, handleEdit, handleDelete }) {
       description,
       id: post._id
     }
-    axios.post("http://localhost:4000/comment/new", newComment, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
+    axios.post(`${process.env.REACT_APP_BackendURL}/comment/new`, newComment, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
       .then((res) => {
         setComments(prevComments => [res.data, ...prevComments])
         setDescription('')
@@ -41,7 +41,7 @@ function Post({ post, onLikedPost, handleEdit, handleDelete }) {
     async function getComments() {
       try {
         setCommentsLoading(true)
-        const data = await axios.get(`http://localhost:4000/comment/${post._id}`)
+        const data = await axios.get(`${process.env.REACT_APP_BackendURL}/comment/${post._id}`)
         setComments(data.data)
       } catch (e) {
         console.log(e)
@@ -60,12 +60,12 @@ function Post({ post, onLikedPost, handleEdit, handleDelete }) {
     const like = {
       postId: post._id
     }
-    axios.post("http://localhost:4000/post/like", like, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
+    axios.post(`${process.env.REACT_APP_BackendURL}/post/like`, like, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
       .then((res) => onLikedPost())
   }
 
   const handleLikeComment = () => {
-    axios.get(`http://localhost:4000/comment/${post._id}`)
+    axios.get(`${process.env.REACT_APP_BackendURL}/comment/${post._id}`)
       .then((res) => setComments(res.data))
       .catch((err) => console.log(err))
   }
@@ -83,8 +83,8 @@ function Post({ post, onLikedPost, handleEdit, handleDelete }) {
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
           <Box display={"flex"} sx={{ alignItems: "center", gap: "5px" }}>
             {post.createdBy.profilePicture ?
-              <img src={`http://localhost:4000/profilepicture/${post.createdBy.profilePicture}`} alt='profile' width={"10%"} style={{ borderRadius: "30px" }} />
-              : <img src={`http://localhost:4000/profilepicture/default-avatar.jpg`} alt='profile' width={"10%"} style={{ borderRadius: "30px" }} />
+              <img src={`${process.env.REACT_APP_BackendURL}/profilepicture/${post.createdBy.profilePicture}`} alt='profile' width={"10%"} style={{ borderRadius: "30px" }} />
+              : <img src={`${process.env.REACT_APP_BackendURL}/profilepicture/default-avatar.jpg`} alt='profile' width={"10%"} style={{ borderRadius: "30px" }} />
             }
             <Link
               to={"/profile/" + post.createdBy._id}
@@ -117,7 +117,7 @@ function Post({ post, onLikedPost, handleEdit, handleDelete }) {
         </Typography>
         {post.image &&
           <Box>
-            <img src={`http://localhost:4000/images/${post.image}`} alt={"Post"} width="100%" />
+            <img src={`${process.env.REACT_APP_BackendURL}/images/${post.image}`} alt={"Post"} width="100%" />
           </Box>
         }
         <Divider />

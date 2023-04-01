@@ -16,14 +16,14 @@ function Comment({ comment, onLikedComment, comments, setComments }) {
     const like = {
       commentId: comment._id
     }
-    axios.post("http://localhost:4000/comment/like", like, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
+    axios.post(`${process.env.REACT_APP_BackendURL}/comment/like`, like, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
       .then((res) => onLikedComment())
   }
 
   const handleDelete = () => {
     const confirmation = window.confirm("Are you sure you want to delete this comment?")
     confirmation &&
-      axios.delete(`http://localhost:4000/comment/delete/${comment._id}`, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
+      axios.delete(`${process.env.REACT_APP_BackendURL}/comment/delete/${comment._id}`, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
         .then((res) => {
           setComments(comments.filter((comment) => comment._id !== res.data._id))
         })
@@ -39,8 +39,8 @@ function Comment({ comment, onLikedComment, comments, setComments }) {
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <Box display={"flex"} sx={{ alignItems: "center", gap: "5px" }}>
           {comment.createdBy.profilePicture ?
-            <img src={`http://localhost:4000/profilepicture/${comment.createdBy.profilePicture}`} alt='profile' width={"8%"} style={{ borderRadius: "30px" }} />
-            : <img src={`http://localhost:4000/profilepicture/default-avatar.jpg`} alt='profile' width={"8%"} style={{ borderRadius: "30px" }} />
+            <img src={`${process.env.REACT_APP_BackendURL}/profilepicture/${comment.createdBy.profilePicture}`} alt='profile' width={"8%"} style={{ borderRadius: "30px" }} />
+            : <img src={`${process.env.REACT_APP_BackendURL}/profilepicture/default-avatar.jpg`} alt='profile' width={"8%"} style={{ borderRadius: "30px" }} />
           }
           <Link
             to={"/profile/" + comment.createdBy._id}

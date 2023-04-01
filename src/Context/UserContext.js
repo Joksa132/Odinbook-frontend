@@ -7,7 +7,7 @@ export const UserProvider = (props) => {
   const [user, setUser] = useState(null)
 
   useEffect(() => {
-    axios.get("http://localhost:4000/user/info", { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
+    axios.get(`${process.env.REACT_APP_BackendURL}/user/info`, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
       .then(res => {
         setUser(
           {

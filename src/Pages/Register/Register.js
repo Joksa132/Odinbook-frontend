@@ -49,7 +49,7 @@ function Register() {
       username,
       password
     }
-    axios.post("http://localhost:4000/user/register", newUser)
+    axios.post(`${process.env.REACT_APP_BackendURL}/user/register`, newUser)
       .then((res) => navigate("/login"))
       .catch((err) => {
         console.log(err)

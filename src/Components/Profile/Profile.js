@@ -32,7 +32,7 @@ function Profile() {
     async function getProfileInfo() {
       try {
         setLoading(true);
-        const data = await axios.get(`http://localhost:4000/user/${id}`)
+        const data = await axios.get(`${process.env.REACT_APP_BackendURL}/user/${id}`)
         setProfileInfo(data.data)
       } catch (e) {
         console.log(e)
@@ -48,7 +48,7 @@ function Profile() {
     async function getProfilePosts() {
       try {
         setPostsLoading(true)
-        const data = await axios.get(`http://localhost:4000/post/${id}`)
+        const data = await axios.get(`${process.env.REACT_APP_BackendURL}/post/${id}`)
         setPosts(data.data)
       } catch (e) {
         console.log(e)
@@ -61,7 +61,7 @@ function Profile() {
   }, [id])
 
   const handleLikePost = () => {
-    axios.get(`http://localhost:4000/post/${id}`)
+    axios.get(`${process.env.REACT_APP_BackendURL}/post/${id}`)
       .then((res) => setPosts(res.data))
       .catch((err) => console.log(err))
   }
@@ -69,7 +69,7 @@ function Profile() {
   const handleDelete = (id) => {
     const confirmation = window.confirm("Are you sure you want to delete this post?")
     confirmation &&
-      axios.delete(`http://localhost:4000/post/delete/${id}`, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
+      axios.delete(`${process.env.REACT_APP_BackendURL}/post/delete/${id}`, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
         .then((res) => {
           setPosts(posts.filter((post) => post._id !== res.data._id))
         })
@@ -84,9 +84,9 @@ function Profile() {
         description
       }
 
-      axios.post("http://localhost:4000/post/new", newPost, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
+      axios.post(`${process.env.REACT_APP_BackendURL}/post/new`, newPost, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
         .then(res => {
-          axios.put(`http://localhost:4000/post/newImage/${res.data._id}`, formData, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
+          axios.put(`${process.env.REACT_APP_BackendURL}/post/newImage/${res.data._id}`, formData, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
             .then(res => {
               setPosts(prevPosts => [res.data, ...prevPosts])
               console.log(res.data)
@@ -100,7 +100,7 @@ function Profile() {
         description
       }
 
-      axios.post("http://localhost:4000/post/new", newPost, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
+      axios.post(`${process.env.REACT_APP_BackendURL}/post/new`, newPost, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
         .then((res) => { setPosts(prevPosts => [res.data, ...prevPosts]) })
         .catch((err) => console.log(err))
     }
@@ -118,7 +118,7 @@ function Profile() {
     const updatePost = {
       description
     }
-    axios.put(`http://localhost:4000/post/update/${id}`, updatePost)
+    axios.put(`${process.env.REACT_APP_BackendURL}/post/update/${id}`, updatePost)
       .then(res => {
         setPosts(posts.map(post => (post._id === res.data._id ? res.data : post)))
         setEdit(null)
@@ -127,7 +127,7 @@ function Profile() {
   }
 
   const handleFollow = () => {
-    axios.get(`http://localhost:4000/user/${id}`)
+    axios.get(`${process.env.REACT_APP_BackendURL}/user/${id}`)
       .then((res) => setProfileInfo(res.data))
       .catch(err => console.log(err))
   }
@@ -136,7 +136,7 @@ function Profile() {
     const follow = {
       id
     }
-    axios.post("http://localhost:4000/user/follow", follow, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
+    axios.post(`${process.env.REACT_APP_BackendURL}/user/follow`, follow, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
       .then(res => handleFollow())
       .catch(err => console.log(err))
   }
@@ -147,13 +147,13 @@ function Profile() {
     const formData = new FormData()
     formData.append("image", uploadedImage)
 
-    axios.put(`http://localhost:4000/user/profilepicture/${profileInfo._id}`, formData, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
+    axios.put(`${process.env.REACT_APP_BackendURL}/user/profilepicture/${profileInfo._id}`, formData, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
       .then(res => handleImageChange())
       .catch(err => console.log(err))
   }
 
   const handleImageChange = () => {
-    axios.get(`http://localhost:4000/user/${id}`)
+    axios.get(`${process.env.REACT_APP_BackendURL}/user/${id}`)
       .then(res => setProfileInfo(res.data))
       .catch(err => console.log(err))
   }
@@ -177,8 +177,8 @@ function Profile() {
               <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: "10px" }}>
                 <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "10px" }}>
                   {profileInfo.profilePicture ?
-                    <img src={`http://localhost:4000/profilepicture/${profileInfo.profilePicture}`} alt='profile' width={"10%"} style={{ borderRadius: "30px" }} />
-                    : <img src={`http://localhost:4000/profilepicture/default-avatar.jpg`} alt='profile' width={"10%"} style={{ borderRadius: "30px" }} />
+                    <img src={`${process.env.REACT_APP_BackendURL}/profilepicture/${profileInfo.profilePicture}`} alt='profile' width={"10%"} style={{ borderRadius: "30px" }} />
+                    : <img src={`${process.env.REACT_APP_BackendURL}/profilepicture/default-avatar.jpg`} alt='profile' width={"10%"} style={{ borderRadius: "30px" }} />
                   }
                   <Typography variant='h4' sx={{ marginBottom: "10px" }}>
                     {profileInfo.firstName + " " + profileInfo.lastName}

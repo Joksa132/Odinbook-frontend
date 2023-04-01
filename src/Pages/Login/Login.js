@@ -37,7 +37,7 @@ function Login() {
       username,
       password
     }
-    axios.post("http://localhost:4000/user/login", user)
+    axios.post(`${process.env.REACT_APP_BackendURL}/user/login`, user)
       .then((res) => {
         console.log(res.data)
         setUser({
