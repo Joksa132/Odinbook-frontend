@@ -108,6 +108,7 @@ function Login() {
                   {error}
                 </Typography>
               )}
+              <Typography variant="body2" color="primary">If you don't want to register: username: marko | password: marko</Typography>
               <Button
                 type="submit"
                 variant="contained"
