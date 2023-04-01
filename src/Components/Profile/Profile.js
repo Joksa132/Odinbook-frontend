@@ -177,7 +177,7 @@ function Profile() {
               <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: "10px" }}>
                 <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "10px" }}>
                   {profileInfo.profilePicture ?
-                    <img src={`${process.env.REACT_APP_BackendURL}/profilepicture/${profileInfo.profilePicture}`} alt='profile' width={"10%"} style={{ borderRadius: "30px" }} />
+                    <img src={profileInfo.profilePicture} alt='profile' width={"10%"} style={{ borderRadius: "30px" }} />
                     : <img src={`${process.env.REACT_APP_BackendURL}/profilepicture/default-avatar.jpg`} alt='profile' width={"10%"} style={{ borderRadius: "30px" }} />
                   }
                   <Typography variant='h4' sx={{ marginBottom: "10px" }}>

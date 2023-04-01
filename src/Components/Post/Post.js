@@ -83,7 +83,7 @@ function Post({ post, onLikedPost, handleEdit, handleDelete }) {
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
           <Box display={"flex"} sx={{ alignItems: "center", gap: "5px" }}>
             {post.createdBy.profilePicture ?
-              <img src={`${process.env.REACT_APP_BackendURL}/profilepicture/${post.createdBy.profilePicture}`} alt='profile' width={"10%"} style={{ borderRadius: "30px" }} />
+              <img src={post.createdBy.profilePicture} alt='profile' width={"10%"} style={{ borderRadius: "30px" }} />
               : <img src={`${process.env.REACT_APP_BackendURL}/profilepicture/default-avatar.jpg`} alt='profile' width={"10%"} style={{ borderRadius: "30px" }} />
             }
             <Link
@@ -117,7 +117,7 @@ function Post({ post, onLikedPost, handleEdit, handleDelete }) {
         </Typography>
         {post.image &&
           <Box>
-            <img src={`${process.env.REACT_APP_BackendURL}/images/${post.image}`} alt={"Post"} width="100%" />
+            <img src={post.image} alt={"Post"} width="100%" />
           </Box>
         }
         <Divider />
