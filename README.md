@@ -4,7 +4,7 @@ Made for [The Odin Project](https://www.theodinproject.com/) course.
 
 Check [Odinbook-backend](https://github.com/Joksa132/odinbook-backend)
 ## Description:
-Frontend repository for a social media website created for the Odinbook Project NodeJS course.
+Frontend repository for a social media website created for the Odin Project NodeJS course.
 
 ## Technologies:
 * [ReactJS](https://react.dev/)
