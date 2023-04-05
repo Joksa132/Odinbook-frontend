@@ -74,13 +74,13 @@ function Post({ post, onLikedPost, handleEdit, handleDelete }) {
     <Box
       sx={{
         backgroundColor: "rgb(36,37,38)",
-        width: "500px",
+        width: { xs: "270px", sm: "500px" },
         padding: "10px",
         marginBottom: "20px",
         borderRadius: "8px"
       }}>
       <Box>
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, justifyContent: "space-between" }}>
           <Box display={"flex"} sx={{ alignItems: "center", gap: "5px" }}>
             {post.createdBy.profilePicture ?
               <img src={post.createdBy.profilePicture} alt='profile' width={"10%"} style={{ borderRadius: "30px" }} />

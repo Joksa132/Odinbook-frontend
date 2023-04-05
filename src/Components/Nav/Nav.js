@@ -51,7 +51,7 @@ function Nav() {
   return (
     <ThemeProvider theme={darkTheme}>
       <AppBar position="sticky">
-        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Toolbar sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, justifyContent: "space-between" }}>
           <Typography
             variant="h5"
             component="a"

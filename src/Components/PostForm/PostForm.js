@@ -47,7 +47,7 @@ function PostForm({ onSubmit, editValue, onEdit, id }) {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        width: "450px"
+        width: { xs: "270px", sm: "400px" }
       }}
       onSubmit={handleSubmit}
     >
@@ -60,7 +60,7 @@ function PostForm({ onSubmit, editValue, onEdit, id }) {
         name="description"
         autoFocus
         onChange={onChangeDescription}
-        sx={{ width: "400px" }}
+        sx={{ width: { xs: "255px", sm: "370px" } }}
         value={description}
       />
       <IconButton color="primary" aria-label="upload picture" component="label">
