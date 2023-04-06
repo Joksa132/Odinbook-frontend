@@ -52,19 +52,18 @@ function Nav() {
     <ThemeProvider theme={darkTheme}>
       <AppBar position="sticky">
         <Toolbar sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, justifyContent: "space-between" }}>
-          <Typography
-            variant="h5"
-            component="a"
-            href="/"
-            sx={{
-              textDecoration: 'none',
-              color: 'inherit',
-              fontWeight: 700,
-            }}
-          >
-            Odinbook
-          </Typography>
-
+          <Link style={{ textDecoration: "none", color: "white" }} to={"/"}>
+            <Typography
+              variant="h5"
+              sx={{
+                textDecoration: 'none',
+                color: 'inherit',
+                fontWeight: 700,
+              }}
+            >
+              Odinbook
+            </Typography>
+          </Link>
           <Box component="form" onSubmit={onSubmit} >
             <TextField
               rows="2"
