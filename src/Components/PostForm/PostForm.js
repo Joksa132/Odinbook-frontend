@@ -63,8 +63,9 @@ function PostForm({ onSubmit, editValue, onEdit, id }) {
         sx={{ width: { xs: "255px", sm: "370px" } }}
         value={description}
       />
+      <Typography color="primary" variant="body2">Max image size is 10MB</Typography>
       <IconButton color="primary" aria-label="upload picture" component="label">
-        <input type="file" hidden accept="image/*" id="button-upload-image" onChange={handleImage} />
+        <input type="file" hidden accept="image/*" id="button-upload-image" size="10000000" onChange={handleImage} />
         <PhotoCamera />
       </IconButton>
       {image &&
